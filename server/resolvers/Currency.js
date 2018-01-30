@@ -1,11 +1,13 @@
 import Currency from '../models/Currency'
+import GraphQLJSON from 'graphql-type-json';
 
 export default {
+  JSON: GraphQLJSON,
   Query: {
-    topCurrency: async (parent, args, { cache }) => {
+    topCurrency: async () => {
       try {
-        console.log('cache', cache)
         return {
+          currency: await Currency.find().sort({requests: 'desc'}),
           ok: true,
         }
       } catch (err) {
@@ -15,9 +17,10 @@ export default {
         }
       }
     },
-    currencyRate: async (parent, { cur }, { cache }) => {
+    currencyRate: async (parent, args, { cache }) => {
       try {
         return {
+          cache,
           ok: true,
         }
       } catch (err) {
@@ -31,13 +34,23 @@ export default {
   Mutation: {
     convert: async (parent, { amount, cur, destCur }, { cache }) => {
       try {
-        // const top = await Currency.find({name: destCur});
-        // if(!top) {
-        //     await Currency.create({name: destCur, converted: amount, request: 1});
-        // }
-        // pubsub.publish(WORKOUT_ADDED, {workoutAdded: workout});
+        let currency = await Currency.findOne({ name: destCur })
+        const convertedAmountinUSD = amount * cache[cur]
+        if (!currency) {
+          currency = await Currency.create({
+            name: destCur,
+            converted: convertedAmountinUSD,
+            requests: 1,
+          })
+        } else {
+          currency.converted = currency.converted + convertedAmountinUSD
+          currency.requests = currency.requests + 1
+          currency.save()
+        }
         return {
-          convertedAmount: 8,
+          convertedAmountDest: convertedAmountinUSD * cache[destCur],
+          convertedAmountinUSD,
+          currency,
           ok: true,
         }
       } catch (err) {

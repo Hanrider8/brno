@@ -1,4 +1,5 @@
 export default `
+scalar JSON
   type Currency {
     _id: ID!
     name: String!
@@ -13,15 +14,15 @@ export default `
   }
   
   type ConvertedAmount {
-    convertedAmount: Float
+    convertedAmountDest: Float
+    convertedAmountinUSD: Float
     currency: Currency
     ok: Boolean!
     valErrors: [String]
   }
   
   type currencyRate {
-    name: String
-    rate: Float
+    cache: JSON
     ok: Boolean!
     valErrors: [String]
   }
@@ -30,7 +31,7 @@ export default `
   
   type Query {
   topCurrency: CurrencyResponse!
-  currencyRate(cur: String): [currencyRate]!
+  currencyRate: currencyRate!
   }
 
   type Mutation {
