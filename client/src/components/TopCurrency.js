@@ -3,7 +3,7 @@ import { graphql } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { extendObservable } from 'mobx'
 import { observer } from 'mobx-react'
-import { Spin, Card, Button } from 'antd'
+import { Card, Button } from 'antd'
 
 import { topCurrencyQuery } from '../graphql/Query'
 
@@ -22,30 +22,31 @@ class TopCurrency extends React.Component {
     extendObservable(this, {
       amount: false,
     })
-    console.log(props)
   }
 
   sort = async () => {
-    console.log('amount', this.amount)
     await this.props.data.refetch({ amount: !this.amount })
     this.amount = !this.amount
-    console.log('amount2', this.amount)
   }
 
   render() {
     const { loading, error, topCurrency } = this.props.data
 
     if (loading) {
-      return <Card
-        title="TOP 10 CURRENCY"
-        loading
-        extra={
-          <Button type="primary" onClick={this.sort} size="small">
-            {this.amount ? 'Amount' : 'Used'}
-          </Button>
-        }
-        style={{ width: 320 }}
-      >loading</Card>
+      return (
+        <Card
+          title="TOP 10 CURRENCY"
+          loading
+          extra={
+            <Button type="primary" onClick={this.sort} size="small">
+              {this.amount ? 'Amount' : 'Used'}
+            </Button>
+          }
+          style={{ width: 320 }}
+        >
+          loading
+        </Card>
+      )
     }
 
     if (error) {

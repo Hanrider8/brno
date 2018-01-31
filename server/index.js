@@ -41,11 +41,6 @@ if (isNotProduction) {
 let currency = {}
 
 const currencyReq = async (req, res, next) => {
-  console.log(
-    'currencyTime',
-    currency.timestamp,
-    currency.timestamp < Date.now() + 1000 * config.FETCH_INTERVAL_IN_SECONDS
-  )
   if (
     currency &&
     currency.timestamp < Date.now() + config.FETCH_INTERVAL_IN_SECONDS * 1000

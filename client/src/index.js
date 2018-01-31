@@ -10,8 +10,6 @@ import { unregister } from './registerServiceWorker'
 import { LocaleProvider } from 'antd'
 import skSk from 'antd/lib/locale-provider/sk_SK'
 
-unregister()
-
 const isNotProduction = process.env.NODE_ENV !== 'production'
 const uri = isNotProduction
   ? 'http://localhost:3001/graphql'
@@ -19,6 +17,7 @@ const uri = isNotProduction
 const client = new ApolloClient({
   link: createHttpLink({ uri }),
   cache: new InMemoryCache(),
+  // shouldBatch: true,
 })
 
 const App = (

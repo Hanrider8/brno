@@ -6,6 +6,7 @@ export const convertMutation = gql`
       ok
       convertedAmountDest
       convertedAmountinUSD
+      valErrors
     }
   }
 `

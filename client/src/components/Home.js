@@ -28,12 +28,12 @@ class Home extends React.Component {
           </h1>
         </Header>
         <Content>
-          <div style={{ padding: '25px 25px 8px 25px' }}>
-            <Row>
-              <Col xs={2} sm={4} md={6} lg={8} xl={20}>
+          <div style={{ padding: 25 }}>
+            <Row gutter={16}>
+              <Col xs={24} sm={14} md={14} lg={16} xl={18}>
                 <Converter />
               </Col>
-              <Col xs={2} sm={4} md={6} lg={8} xl={2}>
+              <Col xs={1} sm={12} md={1} lg={1} xl={2}>
                 <TopCurrency />
               </Col>
             </Row>
