@@ -24,8 +24,8 @@ class Converter extends React.Component {
     super(props)
     extendObservable(this, {
       amount: null,
-      cur: null,
-      destCur: null,
+      cur: 'CZK',
+      destCur: 'EUR',
       convertedAmount: null,
       convertedAmountUSD: null,
       errors: [],
@@ -84,6 +84,7 @@ class Converter extends React.Component {
             />
             <Select
               style={{ width: 90 }}
+              defaultValue={this.cur}
               size="large"
               onChange={key => (this.cur = key)}
             >
@@ -104,6 +105,7 @@ class Converter extends React.Component {
             <Select
               style={{ width: 90 }}
               size="large"
+              defaultValue={this.destCur}
               onChange={key => (this.destCur = key)}
             >
               {this.ops(currencyRate.cache)}
