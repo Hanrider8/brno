@@ -16,7 +16,6 @@ scalar JSON
   type ConvertedAmount {
     convertedAmountDest: Float
     convertedAmountinUSD: Float
-    currency: Currency
     ok: Boolean!
     valErrors: [String]
   }
@@ -30,22 +29,16 @@ scalar JSON
   
   
   type Query {
-  topCurrency: CurrencyResponse!
+  topCurrency(amount: Boolean): CurrencyResponse!
   currencyRate: currencyRate!
   }
 
   type Mutation {
-    convert(amount: Int!, cur: String!, destCur: String!): ConvertedAmount!
-  }
-
-  type Subscription {
-    newConvert: Currency!
+    convert(amount: Float!, cur: String!, destCur: String!): ConvertedAmount!
   }
 
   schema {
     query: Query
     mutation: Mutation
-    subscription: Subscription
   }
-
 `

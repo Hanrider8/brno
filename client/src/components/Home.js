@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout } from 'antd'
+import { Layout, Row, Col } from 'antd'
 import bkg from '../bkg.jpg'
 
 import Converter from './Converter'
@@ -29,8 +29,14 @@ class Home extends React.Component {
         </Header>
         <Content>
           <div style={{ padding: '25px 25px 8px 25px' }}>
-            <Converter />
-            <TopCurrency />
+            <Row>
+              <Col xs={2} sm={4} md={6} lg={8} xl={20}>
+                <Converter />
+              </Col>
+              <Col xs={2} sm={4} md={6} lg={8} xl={2}>
+                <TopCurrency />
+              </Col>
+            </Row>
           </div>
         </Content>
       </Layout>

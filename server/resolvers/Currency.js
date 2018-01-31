@@ -1,13 +1,16 @@
 import Currency from '../models/Currency'
 import GraphQLJSON from 'graphql-type-json'
 
+const round = (value, spaces = 2) => Number(value.toFixed(spaces))
+
 export default {
   JSON: GraphQLJSON,
   Query: {
-    topCurrency: async () => {
+    topCurrency: async (parent, {amount}) => {
       try {
+        console.log('amount', amount)
         return {
-          currency: await Currency.find().sort({ requests: 'desc' }),
+          currency: amount ? await Currency.find().limit(10).sort({ converted: 'desc' }) : await Currency.find().limit(10).sort({ requests: 'desc' }),
           ok: true,
         }
       } catch (err) {
@@ -35,24 +38,21 @@ export default {
     convert: async (parent, { amount, cur, destCur }, { cache }) => {
       try {
         let currency = await Currency.findOne({ name: destCur })
-        let convertedAmountinUSD = Number((amount * cache[cur]).toFixed(2))
+        let convertedAmountinUSD = round(amount / cache[cur], 4)
         if (!currency) {
-          currency = await Currency.create({
+          await Currency.create({
             name: destCur,
             converted: convertedAmountinUSD,
             requests: 1,
           })
         } else {
-          currency.converted = currency.converted + convertedAmountinUSD
+          currency.converted = round(currency.converted + convertedAmountinUSD, 4)
           currency.requests += 1
           currency.save()
         }
         return {
-          convertedAmountDest: Number(
-            (convertedAmountinUSD * cache[destCur]).toFixed(2)
-          ),
+          convertedAmountDest: round(convertedAmountinUSD * cache[destCur], 4),
           convertedAmountinUSD,
-          currency,
           ok: true,
         }
       } catch (err) {

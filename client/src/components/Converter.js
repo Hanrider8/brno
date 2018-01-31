@@ -1,8 +1,11 @@
 import React from 'react'
-import gql from 'graphql-tag'
 import { graphql, compose } from 'react-apollo'
 import PropTypes from 'prop-types'
+import { extendObservable } from 'mobx'
+import { observer } from 'mobx-react'
 import { Spin, InputNumber, Select, Input, Button } from 'antd'
+import { currencyRateQuery } from '../graphql/Query'
+import { convertMutation } from '../graphql/Mutation'
 
 const Option = Select.Option
 const InputGroup = Input.Group
@@ -17,18 +20,19 @@ class Converter extends React.Component {
     convertMutation: PropTypes.func.isRequired,
   }
 
-  //to-do mobx replace state
-  state = {
-    amount: null,
-    cur: null,
-    destCur: null,
-    convertedAmount: null,
-    convertedAmountUSD: null,
+  constructor(props) {
+    super(props)
+    extendObservable(this, {
+      amount: null,
+      cur: null,
+      destCur: null,
+      convertedAmount: null,
+      convertedAmountUSD: null,
+    })
   }
 
   convert = async () => {
-    const { amount, cur, destCur } = this.state
-    console.log('convert ', amount, cur, destCur)
+    const { amount, cur, destCur } = this
     await this.props
       .convertMutation({
         variables: {
@@ -36,13 +40,11 @@ class Converter extends React.Component {
           cur,
           destCur,
         },
+        refetchQueries: [`topCurrency`]
       })
       .then(({ data }) => {
-        console.log('data', data)
-        this.setState({
-          convertedAmount: data.convert.convertedAmountDest,
-          convertedAmountUSD: data.convert.convertedAmountinUSD,
-        })
+        (this.convertedAmount = data.convert.convertedAmountDest),
+        (this.convertedAmountUSD = data.convert.convertedAmountinUSD)
       })
   }
 
@@ -56,6 +58,7 @@ class Converter extends React.Component {
 
   render() {
     const { loading, error, currencyRate } = this.props.currencyRateQuery
+    let { convertedAmount, convertedAmountUSD } = this
 
     if (loading) {
       return <Spin />
@@ -73,13 +76,13 @@ class Converter extends React.Component {
             <InputNumber
               min={0}
               style={{ width: 150 }}
-              onChange={value => this.setState({ amount: value })}
+              onChange={value => (this.amount = value)}
               size="large"
             />
             <Select
               style={{ width: 80 }}
               size="large"
-              onChange={key => this.setState({ cur: key })}
+              onChange={key => (this.cur = key)}
             >
               {this.ops(currencyRate.cache)}
             </Select>
@@ -92,21 +95,21 @@ class Converter extends React.Component {
               style={{ width: 150 }}
               disabled
               size="large"
-              value={this.state.convertedAmount}
+              value={convertedAmount}
             />
             <Select
               style={{ width: 80 }}
               size="large"
-              onChange={key => this.setState({ destCur: key })}
+              onChange={key => (this.destCur = key)}
             >
               {this.ops(currencyRate.cache)}
             </Select>
           </InputGroup>
         </div>
         <div>
-          <Button onClick={this.convert}>
-            {this.state.convertedAmountUSD
-              ? `Amount in USD: ${this.state.convertedAmountUSD}`
+          <Button disabled={!this.destCur || !this.cur || !this.amount} onClick={this.convert}>
+            {convertedAmountUSD
+              ? `Amount in USD: ${convertedAmountUSD}`
               : 'Convert'}
           </Button>
         </div>
@@ -115,32 +118,8 @@ class Converter extends React.Component {
   }
 }
 
-const currencyRateQuery = gql`
-  {
-    currencyRate {
-      cache
-      ok
-      valErrors
-    }
-  }
-`
-
-const convertMutation = gql`
-  mutation convert($amount: Int!, $cur: String!, $destCur: String!) {
-    convert(amount: $amount, cur: $cur, destCur: $destCur) {
-      ok
-      convertedAmountDest
-      convertedAmountinUSD
-      currency {
-        name
-        converted
-        requests
-      }
-    }
-  }
-`
-
 export default compose(
   graphql(currencyRateQuery, { name: 'currencyRateQuery' }),
-  graphql(convertMutation, { name: 'convertMutation' })
-)(Converter)
+  graphql(convertMutation, {
+    name: 'convertMutation'})
+)(observer(Converter))

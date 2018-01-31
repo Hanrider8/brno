@@ -1,8 +1,11 @@
 import React from 'react'
-import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
 import PropTypes from 'prop-types'
-import { Spin, Card } from 'antd'
+import { extendObservable } from 'mobx'
+import { observer } from 'mobx-react'
+import { Spin, Card, Button } from 'antd'
+
+import { topCurrencyQuery } from '../graphql/Query'
 
 class TopCurrency extends React.Component {
   static propTypes = {
@@ -13,11 +16,36 @@ class TopCurrency extends React.Component {
     }).isRequired,
   }
 
+  constructor(props) {
+    super(props)
+
+    extendObservable(this, {
+      amount: false,
+    })
+    console.log(props)
+  }
+
+  sort = async () => {
+    console.log('amount', this.amount)
+    await this.props.data.refetch({ amount: !this.amount })
+    this.amount = !this.amount
+    console.log('amount2', this.amount)
+  }
+
   render() {
     const { loading, error, topCurrency } = this.props.data
 
     if (loading) {
-      return <Spin />
+      return <Card
+        title="TOP 10 CURRENCY"
+        loading
+        extra={
+          <Button type="primary" onClick={this.sort} size="small">
+            {this.amount ? 'Amount' : 'Used'}
+          </Button>
+        }
+        style={{ width: 320 }}
+      >loading</Card>
     }
 
     if (error) {
@@ -26,29 +54,36 @@ class TopCurrency extends React.Component {
     }
 
     return (
-      <Card title="TOP CURRENCY" style={{ width: 200 }}>
-        {topCurrency.currency.map(cur => (
-          <p key={cur.name}>
-            {cur.name} - {cur.converted} - {cur.requests}
-          </p>
-        ))}
+      <Card
+        title="TOP 10 CURRENCY"
+        extra={
+          <Button type="primary" onClick={this.sort} size="small">
+            {this.amount ? 'Amount' : 'Used'}
+          </Button>
+        }
+        style={{ width: 320 }}
+      >
+        <table style={{ width: '100%' }}>
+          <thead>
+            <tr>
+              <th>Curr</th>
+              <th>Amount</th>
+              <th>Used</th>
+            </tr>
+          </thead>
+          {topCurrency.currency.map(cur => (
+            <tbody key={cur.name}>
+              <tr>
+                <td>{cur.name}</td>
+                <td>{cur.converted} $</td>
+                <td>{cur.requests}</td>
+              </tr>
+            </tbody>
+          ))}
+        </table>
       </Card>
     )
   }
 }
 
-const topCurrencyQuery = gql`
-  {
-    topCurrency {
-      ok
-      valErrors
-      currency {
-        name
-        converted
-        requests
-      }
-    }
-  }
-`
-
-export default graphql(topCurrencyQuery)(TopCurrency)
+export default graphql(topCurrencyQuery)(observer(TopCurrency))
