@@ -52,9 +52,7 @@ const currencyReq = async (req, res, next) => {
   ) {
     req.currency = currency
   } else {
-    await fetch(
-      'https://openexchangerates.org/api/latest.json?app_id=ae9771db4c2248c299c0b6b1e6054570'
-    )
+    await fetch(`https://${config.API_URL}?app_id=${config.API_KEY}`)
       .then(res => res.json())
       .then(json => {
         req.currency = json

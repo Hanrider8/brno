@@ -35,7 +35,7 @@ scalar JSON
   }
 
   type Mutation {
-    convert(amount: Float!, cur: String!, destCur: String!): ConvertedAmount!
+    convert(amount: Int!, cur: String!, destCur: String!): ConvertedAmount!
   }
 
   type Subscription {

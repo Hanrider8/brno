@@ -1,5 +1,5 @@
 import Currency from '../models/Currency'
-import GraphQLJSON from 'graphql-type-json';
+import GraphQLJSON from 'graphql-type-json'
 
 export default {
   JSON: GraphQLJSON,
@@ -7,7 +7,7 @@ export default {
     topCurrency: async () => {
       try {
         return {
-          currency: await Currency.find().sort({requests: 'desc'}),
+          currency: await Currency.find().sort({ requests: 'desc' }),
           ok: true,
         }
       } catch (err) {
@@ -35,7 +35,7 @@ export default {
     convert: async (parent, { amount, cur, destCur }, { cache }) => {
       try {
         let currency = await Currency.findOne({ name: destCur })
-        const convertedAmountinUSD = amount * cache[cur]
+        let convertedAmountinUSD = Number((amount * cache[cur]).toFixed(2))
         if (!currency) {
           currency = await Currency.create({
             name: destCur,
@@ -44,11 +44,13 @@ export default {
           })
         } else {
           currency.converted = currency.converted + convertedAmountinUSD
-          currency.requests = currency.requests + 1
+          currency.requests += 1
           currency.save()
         }
         return {
-          convertedAmountDest: convertedAmountinUSD * cache[destCur],
+          convertedAmountDest: Number(
+            (convertedAmountinUSD * cache[destCur]).toFixed(2)
+          ),
           convertedAmountinUSD,
           currency,
           ok: true,

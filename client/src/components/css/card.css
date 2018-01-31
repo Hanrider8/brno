@@ -1,0 +1,51 @@
+.mojCard {
+  font-size: 13px;
+}
+
+.ant-card {
+  background: transparent;
+  box-shadow: 0 8px 12px 0 rgba(16, 142, 233, 0.2),
+    0 5px 15px 0 rgba(16, 142, 233, 0.19);
+  height: 500px;
+  /*transition: 1s;*/
+}
+
+.ant-card-hoverable:hover {
+  -webkit-box-shadow: 0 8px 12px 0 rgba(16, 142, 233, 0.6),
+    0 5px 15px 0 rgba(16, 142, 233, 0.69);
+  box-shadow: 0 8px 12px 0 rgba(16, 142, 233, 0.6),
+    0 5px 15px 0 rgba(16, 142, 233, 0.69);
+}
+
+.ant-card-head {
+  background: rgba(16, 142, 233, 0.9);
+  height: 48px;
+}
+
+.ant-card-actions {
+  height: 42px;
+}
+
+
+
+.ant-card-head-title {
+  font-size: 15px;
+  color: #fff;
+}
+
+.ant-card-actions > li {
+  margin: 8px 0;
+}
+
+.ant-card-body {
+  padding: 10px 14px 0;
+}
+
+.ant-divider-inner-text {
+  padding: 0 10px;
+}
+
+.ant-divider-horizontal.ant-divider-with-text {
+  font-size: 13px;
+  margin: 5px 0;
+}
