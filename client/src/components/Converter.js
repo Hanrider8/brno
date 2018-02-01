@@ -1,14 +1,14 @@
-import React from 'react'
-import { graphql, compose } from 'react-apollo'
-import PropTypes from 'prop-types'
-import { extendObservable } from 'mobx'
-import { observer } from 'mobx-react'
-import { Spin, InputNumber, Select, Input, Button, Icon, Alert } from 'antd'
-import { currencyRateQuery } from '../graphql/Query'
-import { convertMutation } from '../graphql/Mutation'
+import React from 'react';
+import { graphql, compose } from 'react-apollo';
+import PropTypes from 'prop-types';
+import { extendObservable } from 'mobx';
+import { observer } from 'mobx-react';
+import { Spin, InputNumber, Select, Input, Button, Icon, Alert } from 'antd';
+import { currencyRateQuery } from '../graphql/Query';
+import { convertMutation } from '../graphql/Mutation';
 
-const Option = Select.Option
-const InputGroup = Input.Group
+const Option = Select.Option;
+const InputGroup = Input.Group;
 
 class Converter extends React.Component {
   static propTypes = {
@@ -21,7 +21,7 @@ class Converter extends React.Component {
   }
 
   constructor(props) {
-    super(props)
+    super(props);
     extendObservable(this, {
       amount: null,
       cur: 'CZK',
@@ -29,11 +29,11 @@ class Converter extends React.Component {
       convertedAmount: null,
       convertedAmountUSD: null,
       errors: [],
-    })
+    });
   }
 
   convert = async () => {
-    const { amount, cur, destCur } = this
+    const { amount, cur, destCur } = this;
     await this.props
       .convertMutation({
         variables: {
@@ -41,34 +41,34 @@ class Converter extends React.Component {
           cur,
           destCur,
         },
-        refetchQueries: [`topCurrency`],
+        refetchQueries: ['topCurrency'],
       })
       .then(({ data }) => {
         if (data.convert.ok) {
-          this.errors = []
-          this.convertedAmount = data.convert.convertedAmountDest
-          this.convertedAmountUSD = data.convert.convertedAmountinUSD
-        } else this.errors = data.convert.valErrors
-      })
+          this.errors = [];
+          this.convertedAmount = data.convert.convertedAmountDest;
+          this.convertedAmountUSD = data.convert.convertedAmountinUSD;
+        } else this.errors = data.convert.valErrors;
+      });
   }
 
-  ops = options => {
-    const opss = []
-    Object.keys(options).map(k => opss.push(<Option key={k}>{k}</Option>))
-    return opss
+  ops = (options) => {
+    const opss = [];
+    Object.keys(options).map(k => opss.push(<Option key={k}>{k}</Option>));
+    return opss;
   }
 
   render() {
-    const { loading, error, currencyRate } = this.props.currencyRateQuery
-    let { convertedAmount, convertedAmountUSD } = this
+    const { loading, error, currencyRate } = this.props.currencyRateQuery;
+    const { convertedAmount, convertedAmountUSD } = this;
 
     if (loading) {
-      return <Spin />
+      return <Spin />;
     }
 
     if (error) {
-      console.log(error)
-      return <div>{error}</div>
+      console.log(error);
+      return <div>{error}</div>;
     }
 
     return (
@@ -121,9 +121,7 @@ class Converter extends React.Component {
             onClick={this.convert}
           >
             <Icon type="retweet" />
-            {convertedAmountUSD
-              ? `Amount in USD: ${convertedAmountUSD}`
-              : 'Convert'}
+            {convertedAmountUSD ? `Amount in USD: ${convertedAmountUSD}` : 'Convert'}
           </Button>
         </div>
         {this.errors.length > 0 && (
@@ -136,7 +134,7 @@ class Converter extends React.Component {
           />
         )}
       </div>
-    )
+    );
   }
 }
 
@@ -147,5 +145,5 @@ export default compose(
     options: {
       errorPolicy: 'all',
     },
-  })
-)(observer(Converter))
+  }),
+)(observer(Converter));

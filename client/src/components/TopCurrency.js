@@ -1,11 +1,11 @@
-import React from 'react'
-import { graphql } from 'react-apollo'
-import PropTypes from 'prop-types'
-import { extendObservable } from 'mobx'
-import { observer } from 'mobx-react'
-import { Card, Button } from 'antd'
+import React from 'react';
+import { graphql } from 'react-apollo';
+import PropTypes from 'prop-types';
+import { extendObservable } from 'mobx';
+import { observer } from 'mobx-react';
+import { Card, Button } from 'antd';
 
-import { topCurrencyQuery } from '../graphql/Query'
+import { topCurrencyQuery } from '../graphql/Query';
 
 class TopCurrency extends React.Component {
   static propTypes = {
@@ -17,20 +17,20 @@ class TopCurrency extends React.Component {
   }
 
   constructor(props) {
-    super(props)
+    super(props);
 
     extendObservable(this, {
       amount: false,
-    })
+    });
   }
 
   sort = async () => {
-    await this.props.data.refetch({ amount: !this.amount })
-    this.amount = !this.amount
+    await this.props.data.refetch({ amount: !this.amount });
+    this.amount = !this.amount;
   }
 
   render() {
-    const { loading, error, topCurrency } = this.props.data
+    const { loading, error, topCurrency } = this.props.data;
 
     if (loading) {
       return (
@@ -46,12 +46,12 @@ class TopCurrency extends React.Component {
         >
           loading
         </Card>
-      )
+      );
     }
 
     if (error) {
-      console.log(error)
-      return <div>err</div>
+      console.log(error);
+      return <div>err</div>;
     }
 
     return (
@@ -83,8 +83,8 @@ class TopCurrency extends React.Component {
           ))}
         </table>
       </Card>
-    )
+    );
   }
 }
 
-export default graphql(topCurrencyQuery)(observer(TopCurrency))
+export default graphql(topCurrencyQuery)(observer(TopCurrency));

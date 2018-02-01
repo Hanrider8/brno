@@ -41,4 +41,4 @@ scalar JSON
     query: Query
     mutation: Mutation
   }
-`
+`;

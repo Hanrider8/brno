@@ -1,19 +1,16 @@
-import React from 'react'
-import { Layout, Row, Col } from 'antd'
-import bkg from '../bkg.jpg'
+import React from 'react';
+import { Layout, Row, Col } from 'antd';
+import bkg from '../bkg.jpg';
 
-import Converter from './Converter'
-import TopCurrency from './TopCurrency'
+import Converter from './Converter';
+import TopCurrency from './TopCurrency';
 
-const { Header, Content } = Layout
+const { Header, Content } = Layout;
 
 class Home extends React.Component {
   render() {
     return (
-      <Layout
-        className="layout"
-        style={{ minHeight: '100vh', backgroundImage: `url(${bkg})` }}
-      >
+      <Layout className="layout" style={{ minHeight: '100vh', backgroundImage: `url(${bkg})` }}>
         <Header
           style={{
             background: '#537791',
@@ -23,9 +20,7 @@ class Home extends React.Component {
             padding: '0 25px',
           }}
         >
-          <h1 style={{ color: '#fff', float: 'left', marginBottom: '0' }}>
-            Convertis
-          </h1>
+          <h1 style={{ color: '#fff', float: 'left', marginBottom: '0' }}>Convertis</h1>
         </Header>
         <Content>
           <div style={{ padding: 25 }}>
@@ -40,8 +35,8 @@ class Home extends React.Component {
           </div>
         </Content>
       </Layout>
-    )
+    );
   }
 }
 
-export default Home
+export default Home;

@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 export const currencyRateQuery = gql`
   {
@@ -8,7 +8,7 @@ export const currencyRateQuery = gql`
       valErrors
     }
   }
-`
+`;
 
 export const topCurrencyQuery = gql`
   query topCurrency($amount: Boolean) {
@@ -22,4 +22,4 @@ export const topCurrencyQuery = gql`
       }
     }
   }
-`
+`;

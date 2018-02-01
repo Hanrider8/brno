@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 export const convertMutation = gql`
   mutation convert($amount: Float!, $cur: String!, $destCur: String!) {
@@ -9,4 +9,4 @@ export const convertMutation = gql`
       valErrors
     }
   }
-`
+`;
